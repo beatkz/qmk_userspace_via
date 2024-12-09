@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <stdbool.h>
 
 void nicola_type(void);
 void nicola_clear(void);
@@ -27,7 +28,15 @@ bool process_nicola(uint16_t, keyrecord_t *);
 void set_nicola(uint8_t);
 
 typedef enum nicola_keycodes {
-  NG_Q = SAFE_RANGE,
+  NG_TOP = SAFE_RANGE,
+  NG_M_TOP = NG_TOP,
+  NG_1 = NG_TOP,
+  NG_2,
+  NG_3,
+  NG_4,
+  NG_5,
+
+  NG_Q,
   NG_W,
   NG_E,
   NG_R,
@@ -37,6 +46,8 @@ typedef enum nicola_keycodes {
   NG_I,
   NG_O,
   NG_P,
+  NG_LBRC,
+  NG_RBRC,
 
   NG_A,
   NG_S,
@@ -48,6 +59,7 @@ typedef enum nicola_keycodes {
   NG_K,
   NG_L,
   NG_SCLN,
+  NG_QUOT,
 
   NG_Z,
   NG_X,
@@ -60,9 +72,14 @@ typedef enum nicola_keycodes {
   NG_DOT,
   NG_SLSH,
 
+  NG_M_BOTTOM = NG_SLSH,
+
   NG_SHFTL,
   NG_SHFTR,
+
+  NG_BOTTOM = NG_SHFTR,
 } NGKEYS;
 
-#define NG_SAFE_RANGE SAFE_RANGE+32
+#define NG_SAFE_RANGE (NG_BOTTOM+1)
+
 
