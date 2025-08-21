@@ -67,18 +67,12 @@ void nicola_on(void) {
   is_nicola = true;
   nicola_clear();
   layer_on(nicola_layer);
-
-  tap_code(KC_LNG1); // Mac
-  tap_code(KC_INT4); // Win
 }
 
 void nicola_off(void) {
   is_nicola = false;
   nicola_clear();
   layer_off(nicola_layer);
-
-  tap_code(KC_LNG2); // Mac
-  tap_code(KC_INT5); // Win
 }
 
 // 親指シフトの状態
