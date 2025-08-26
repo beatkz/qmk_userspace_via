@@ -1,6 +1,9 @@
+// Sample implement: Based on Teihai70H keymap
+
 #include QMK_KEYBOARD_H
 
 // NICOLA親指シフト
+#include "timer.h" // タイマー機能のために追加
 #include "keymap_japanese.h"
 #include "sendstring_japanese.h"
 #include "nicola.h"
@@ -92,69 +95,63 @@ static uint16_t fn_pressed_time = 0; // fn_pressed の押下時刻を保持
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-
     // NICOLA親指シフト
     case NCL_OFF:
-      if (record->event.pressed) {
-        fn_pressed = true;
-        fn_pressed_time = timer_read(); // 押下時刻を記録
-        layer_on(2);
-      } else {
-        layer_off(2);
-        layer_off(1);
-        nicola_off();
-        nicola_active = false;
-        // NCL_ON 直後（TAPPING_TERM 以内）の場合、IME をオフにする
-        if (fn_pressed && (TIMER_DIFF_16(timer_read(), fn_pressed_time) < TAPPING_TERM)) {
-            #ifdef OS_WINDOWS
-            tap_code(KC_INT5); // 無変換キーで IME をオフ
-            #elif OS_MAC
-            tap_code(KC_LNG2); // Mac の日本語入力オフ
-            #endif
+        if (record->event.pressed) {
+            fn_pressed = true;
+            fn_pressed_time = timer_read(); // 押下時刻を記録
+            layer_on(2); // レイヤー 2 をオン
         } else {
+            layer_off(2); // レイヤー 2 をオフ
+            // NCL_ON 直後（TAPPING_TERM 以内）の場合のみ、NICOLA モードと IME をオフ
+            if (fn_pressed && (TIMER_DIFF_16(timer_read(), fn_pressed_time) < TAPPING_TERM)) {
+                layer_off(1); // _NICOLA レイヤーをオフ
+                nicola_off(); // NICOLA モードをオフ
+                nicola_active = false; // NICOLA モード状態を更新
+                #ifdef OS_WINDOWS
+                tap_code(KC_INT5); // 無変換キーで IME をオフ
+                #elif OS_MAC
+                tap_code(KC_LNG2); // Mac の日本語入力オフ
+                #endif
+            }
+            // NICOLA モードがオンの場合、IME 制御キーを送信せず、モードとレイヤーを維持
+            fn_pressed = false;
+        }
+        return false;
+        break;
+
+    case NCL_ON:
+        if (record->event.pressed) {
+            nicola_on(); // NICOLA モードをオン
+            layer_on(1); // _NICOLA レイヤーをオン
+            nicola_active = true; // NICOLA モード状態を更新
+            fn_pressed = true; // NCL_ON でも fn_pressed を設定
+            fn_pressed_time = timer_read(); // 押下時刻を記録
             #ifdef OS_WINDOWS
             tap_code(KC_INT4); // 変換キーで IME をオン
             #elif OS_MAC
             tap_code(KC_LNG1); // Mac の日本語入力オン
             #endif
         }
-        fn_pressed = false;
-    }
-      return false;
-      break;
-    case NCL_ON:
-      if (record->event.pressed) {
-        nicola_on();
-        layer_on(1);
-        nicola_active = true; // NICOLA モード状態を更新
-        fn_pressed = true; // NCL_ON でも fn_pressed を設定
-        fn_pressed_time = timer_read(); // 押下時刻を記録
-        #ifdef OS_WINDOWS
-        tap_code(KC_INT4); // 変換キーで IME をオン
-        #elif OS_MAC
-        tap_code(KC_LNG1); // Mac の日本語入力オン
-        #endif
-      }
-      return false;
-      break;
+        return false;
+        break;
     // NICOLA親指シフト
-
     default:
-        if(record->event.pressed){
+        if (record->event.pressed) {
             fn_pressed = false; // 他のキー押下で fn_pressed をリセット
         }
         break;
-  }
+    }
 
-  // NICOLA親指シフト
-  bool a = true;
-  if (nicola_active) {
-    nicola_mode(keycode, record);
-    a = process_nicola(keycode, record);
-  }
-  if (a == false) return false;
-  // NICOLA親指シフト
-    return true;
+    // NICOLA親指シフト
+    // NICOLA モードがアクティブな場合、NICOLA 専用のキー処理を行う
+    bool continue_processing = true;
+    if (nicola_active) {
+        nicola_mode(keycode, record);
+        continue_processing = process_nicola(keycode, record);
+    }
+    return continue_processing;
+    // NICOLA親指シフト
 }
 
 // タイマーによる fn_pressed のリセット
@@ -165,7 +162,7 @@ void matrix_scan_user(void) {
 }
 
 void matrix_init_user(void) {
-  // NICOLA親指シフト
-  set_nicola(1);
-  // NICOLA親指シフト
+    // NICOLA親指シフト
+    set_nicola(1);
+    // NICOLA親指シフト
 }

@@ -37,3 +37,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLED_NUM 14    // Number of LEDs
 #define RGBLIGHT_SLEEP
 */
+
+#ifdef __APPLE__
+#define OS_MAC
+#else
+#define OS_WINDOWS
+#endif
