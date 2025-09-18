@@ -1,0 +1,15 @@
+#ここにハードリンクするキーボードフォルダーのフルパスを1行ずつ書く
+#※keymapsは書かない
+#例：D:\OSSProj\kbfw\qmk\us_via\keyboards\foo\barboard21
+D:\OSSProj\kbfw\qmk\us_via\keyboards\lily58
+D:\OSSProj\kbfw\qmk\us_via\keyboards\sphhjp
+D:\OSSProj\kbfw\qmk\us_via\keyboards\dailycraft\claw44
+D:\OSSProj\kbfw\qmk\us_via\keyboards\biacco42\ergo42
+D:\OSSProj\kbfw\qmk\us_via\keyboards\aki27\cocot46plus\
+#サリチル酸氏作
+D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\7skb
+D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\ergoarrows
+D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\jisplit89
+D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\o51go
+#Armチップ搭載機種
+D:\OSSProj\kbfw\qmk\latest\keyboards\alg0002\teihai70h
