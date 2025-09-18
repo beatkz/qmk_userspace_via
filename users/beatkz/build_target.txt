@@ -12,4 +12,4 @@ D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\ergoarrows
 D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\jisplit89
 D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\o51go
 #Armチップ搭載機種
-D:\OSSProj\kbfw\qmk\latest\keyboards\alg0002\teihai70h
+D:\OSSProj\kbfw\qmk\us_via\keyboards\alg0002\teihai70h
