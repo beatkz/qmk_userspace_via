@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 入力ファイル
-INPUT_FILE="nicola_via_build_target.txt"
+INPUT_FILE="qmk_build_target.txt"
 
 # 現在の日付を yyyy-mm-dd 形式で取得
 DATE=$(date +%Y-%m-%d)
@@ -16,6 +16,9 @@ if [[ ! -f "$INPUT_FILE" ]]; then
     exit 1
 fi
 
+# エラーを記録する配列
+declare -a errors
+
 # ファイルから1行ずつ読み込む
 while IFS= read -r line; do
     # 空行やコメント行（#で始まる）をスキップ
@@ -23,12 +26,14 @@ while IFS= read -r line; do
         continue
     fi
 
+    # make コマンドのターゲットを決定
+    target="$line"
+
     # make コマンドを実行
-    echo "make を実行中: $line"
-    make $line:nicola_via
+    echo makeコマンド実行中： $target
+    make $target
     if [[ $? -ne 0 ]]; then
-        echo "エラー: make が失敗しました: $line"
-        exit 1
+        errors+=("$target")
     fi
 
     # 生成された .hex または .uf2 ファイルを移動
@@ -37,11 +42,19 @@ while IFS= read -r line; do
             echo "ファイルを移動: $file -> $OUTPUT_DIR/"
             mv "$file" "$OUTPUT_DIR/"
             if [[ $? -ne 0 ]]; then
-                echo "エラー: ファイルの移動に失敗しました: $file"
-                exit 1
+                errors+=("ファイル移動失敗: $file")
             fi
         fi
     done
 done < "$INPUT_FILE"
 
-echo "全ての make コマンドが正常に実行され、生成ファイルが $OUTPUT_DIR に移動されました。"
+# エラー結果の表示
+if [[ ${#errors[@]} -eq 0 ]]; then
+    echo "全ての make コマンドが正常に実行され、生成ファイルが $OUTPUT_DIR に移動されました。"
+else
+    echo "以下のターゲットでエラーが発生しました:"
+    for error in "${errors[@]}"; do
+        echo "  - $error"
+    done
+    exit 1
+fi
