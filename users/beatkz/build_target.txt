@@ -5,6 +5,8 @@ D:\OSSProj\kbfw\qmk\us_via\keyboards\sphhjp\keymaps\nicola_via
 D:\OSSProj\kbfw\qmk\us_via\keyboards\dailycraft\claw44\keymaps\nicola_via
 D:\OSSProj\kbfw\qmk\us_via\keyboards\biacco42\ergo42\keymaps\nicola_via
 D:\OSSProj\kbfw\qmk\us_via\keyboards\aki27\cocot46plus\keymaps\nicola_via
+D:\OSSProj\kbfw\qmk\us_via\keyboards\keyball\keyball61\keymaps\nicola_via
+D:\OSSProj\kbfw\qmk\us_via\keyboards\keyball\keyball44\keymaps\nicola_via
 #サリチル酸氏作
 D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\7skb\keymaps\nicola_via
 D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\ergoarrows\keymaps\nicola_via

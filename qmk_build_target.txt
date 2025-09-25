@@ -12,6 +12,8 @@ salicylic_acid3/ergoarrows:nicola_via
 salicylic_acid3/7skb:nicola_via
 salicylic_acid3/o51go:nicola_via
 aki27/cocot46plus:nicola_via
+keyball/keyball61:nicola_via,0.22.14
+keyball/keyball44:nicola_via,0.22.14
 #-----
 #ARMチップ搭載KB
 alg0002/teihai70h:nicola_via
