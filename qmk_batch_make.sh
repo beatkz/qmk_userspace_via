@@ -69,6 +69,9 @@ while IFS= read -r line; do
         continue
     fi
 
+    # スクラッチビルド実行のため、ビルドごとにcleanを実行する
+    make clean QMK_FIRMWARE_ROOT="$QMK_FIRMWARE_ROOT"
+
     # make コマンドを実行
     echo "makeコマンド実行中： $target (QMK バージョン: $version)"
     make "$target" QMK_FIRMWARE_ROOT="$QMK_FIRMWARE_ROOT"
