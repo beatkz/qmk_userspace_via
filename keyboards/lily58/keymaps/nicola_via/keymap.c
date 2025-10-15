@@ -15,7 +15,6 @@
   */
 
 #include QMK_KEYBOARD_H
-#include <stdio.h>
 // NICOLA親指シフト
 #include "timer.h" // タイマー機能のために追加
 #include "keymap_japanese.h"
