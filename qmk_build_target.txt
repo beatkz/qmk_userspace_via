@@ -18,6 +18,7 @@ keyball/keyball44:nicola_via,0.22.14
 #ARMチップ搭載KB
 alg0002/teihai70h:nicola_via
 aki27/cocot46plus:nicola_via_pm2040
+hanachi_ap/alien88_mk2:nicola_via
 salicylic_acid3/jisplit89:nicola_via_kb2040
 salicylic_acid3/ergoarrows:nicola_via_kb2040
 salicylic_acid3/7skb:nicola_via_kb2040

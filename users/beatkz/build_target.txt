@@ -15,6 +15,7 @@ D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\o51go\keymaps\nicola_via
 #Armチップ搭載機種
 D:\OSSProj\kbfw\qmk\us_via\keyboards\alg0002\teihai70h\keymaps\nicola_via
 D:\OSSProj\kbfw\qmk\us_via\keyboards\aki27\cocot46plus\keymaps\nicola_via_pm2040
+D:\OSSProj\kbfw\qmk\us_via\keyboards\hanachi_ap\alien88_mk2\keymaps\nicola_via
 D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\7skb\keymaps\nicola_via_kb2040
 D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\ergoarrows\keymaps\nicola_via_kb2040
 D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\jisplit89\keymaps\nicola_via_kb2040
