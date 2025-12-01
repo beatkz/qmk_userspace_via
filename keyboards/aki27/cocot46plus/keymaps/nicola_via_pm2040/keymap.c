@@ -40,8 +40,8 @@ enum layer_number {
     _L5
 };
 
-#define LW_MHEN LT(1,KC_INT5)  // lower
-#define RS_HENK LT(2,KC_INT4)  // raise
+#define LW_MHEN LT(2,KC_INT5)  // lower
+#define RS_HENK LT(3,KC_INT4)  // raise
 #define DEL_ALT ALT_T(KC_DEL)
 
 // In the buttom row, KC_MS_BTN3 binds middle-click to the encoder's button press
@@ -54,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
       KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                                          KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_MINS,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-                        KC_LALT, KC_LGUI,   LW_MHEN,  KC_SPC,    JP_LBRC,              JP_RBRC,    NCL_ON, KC_BSPC, KC_RGUI, KC_RALT,
+                        KC_LALT, KC_LGUI,   LW_MHEN,  KC_SPC,    MS_BTN1,              MS_BTN2,    NCL_ON, KC_BSPC, KC_RGUI, KC_RALT,
                                                                  XXXXXXX,    SCRL_MO,  XXXXXXX,   XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
     ),
@@ -74,11 +74,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
    TO(_RAISE),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                                          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   JP_AT,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-      _______, _______, _______, MS_BTN2, MS_BTN1, _______,                                       KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, JP_COLN, _______,
+      _______, _______, _______, _______, _______, _______,                                       KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, JP_COLN, _______,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
       _______, _______, _______, _______, _______, _______,                                       KC_HOME,  KC_END, S(KC_TAB), KC_TAB, _______, _______,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-                        _______, _______, _______,  _______,   _______,             _______, _______,  KC_DEL, _______, _______,
+                        _______, _______, _______,  _______,   JP_LBRC,             JP_RBRC, _______,  KC_DEL, _______, _______,
                                                                  XXXXXXX, _______,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
     ),

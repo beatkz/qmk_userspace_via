@@ -16,3 +16,11 @@
 #define RGBLIGHT_EFFECT_SNAKE
 #define RGBLIGHT_EFFECT_STATIC_GRADIENT
 #define RGBLIGHT_EFFECT_TWINKLE
+
+// NICOLA親指シフト
+#ifdef __APPLE__
+#define OS_MAC
+#else
+#define OS_WINDOWS
+#endif
+// NICOLA親指シフト
