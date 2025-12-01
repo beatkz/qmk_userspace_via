@@ -19,3 +19,5 @@ D:\OSSProj\kbfw\qmk\us_via\keyboards\hanachi_ap\alien88_mk2\keymaps\nicola_via
 D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\7skb\keymaps\nicola_via_kb2040
 D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\ergoarrows\keymaps\nicola_via_kb2040
 D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\jisplit89\keymaps\nicola_via_kb2040
+D:\OSSProj\kbfw\qmk\us_via\keyboards\salicylic_acid3\goforty_ortho\keymaps\nicola_via
+

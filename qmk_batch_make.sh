@@ -23,6 +23,9 @@ if [[ ! -f "$INPUT_FILE" ]]; then
     exit 1
 fi
 
+# 既に生成されたqmk_userspace_viaにあるファームウェアファイルのクリーニング
+rm -f *.uf2 *.hex *.bin
+
 # 最新版リポジトリの存在確認
 if [[ ! -d "$QMK_FIRMWARE_LATEST" ]]; then
     echo "エラー: 最新版の QMK ファームウェアディレクトリ $QMK_FIRMWARE_LATEST が見つかりません。手動でクローンしてください。"
