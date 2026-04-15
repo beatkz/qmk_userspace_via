@@ -1,4 +1,4 @@
-#ここにハードリンクするキーボードフォルダーのフルパスを1行ずつ書く
+#ここにハードリンクするキーボードフォルダーキーマップまでのフルパスを1行ずつ書く
 #例：D:\OSSProj\kbfw\qmk\us_via\keyboards\foo\barboard21
 D:\OSSProj\kbfw\qmk\us_via\keyboards\lily58\keymaps\nicola_via
 D:\OSSProj\kbfw\qmk\us_via\keyboards\sphhjp\keymaps\nicola_via

@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # QMK集約ディレクトリをここに入力
-QMK_BASE="/d/OSSProj/kbfw/qmk"
+#QMK_BASE="/d/OSSProj/kbfw/qmk"
+QMK_BASE="/home/qmk/kbfw/qmk"
 
 # QMK ファームウェアのディレクトリ
 QMK_FIRMWARE_LATEST="$QMK_BASE/latest"  # 最新版のリポジトリ
