@@ -33,6 +33,9 @@ if [[ ! -d "$QMK_FIRMWARE_LATEST" ]]; then
     exit 1
 fi
 
+# 並列ビルドのジョブ数をCPUコア数+1に設定
+JOBS=$(($(grep cpu.cores /proc/cpuinfo | sort -u | sed 's/[^0-9]//g') + 1))
+
 # エラーを記録する配列
 declare -a errors
 
@@ -78,7 +81,7 @@ while IFS= read -r line; do
 
     # make コマンドを実行
     echo "makeコマンド実行中： $target (QMK バージョン: $version)"
-    make "$target" QMK_FIRMWARE_ROOT="$QMK_FIRMWARE_ROOT"
+    make "$target" -j $JOBS QMK_FIRMWARE_ROOT="$QMK_FIRMWARE_ROOT"
     if [[ $? -ne 0 ]]; then
         errors+=("$target ($version)")
     fi
