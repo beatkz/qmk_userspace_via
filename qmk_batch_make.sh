@@ -24,9 +24,6 @@ if [[ ! -f "$INPUT_FILE" ]]; then
     exit 1
 fi
 
-# 既に生成されたqmk_userspace_viaにあるファームウェアファイルのクリーニング
-rm -f *.uf2 *.hex *.bin
-
 # 最新版リポジトリの存在確認
 if [[ ! -d "$QMK_FIRMWARE_LATEST" ]]; then
     echo "エラー: 最新版の QMK ファームウェアディレクトリ $QMK_FIRMWARE_LATEST が見つかりません。手動でクローンしてください。"
@@ -34,7 +31,10 @@ if [[ ! -d "$QMK_FIRMWARE_LATEST" ]]; then
 fi
 
 # 並列ビルドのジョブ数をCPUコア数+1に設定
-JOBS=$(($(grep cpu.cores /proc/cpuinfo | sort -u | sed 's/[^0-9]//g') + 1))
+#JOBS=$(($(grep cpu.cores /proc/cpuinfo | sort -u | sed 's/[^0-9]//g') + 1))
+
+# 並列ビルドのジョブ数をスレッド数+1に設定
+JOBS=$(($(grep processor /proc/cpuinfo | wc -l) + 1))
 
 # エラーを記録する配列
 declare -a errors
@@ -97,6 +97,9 @@ while IFS= read -r line; do
         fi
     done
 done < "$INPUT_FILE"
+
+# qmk_userspace_viaルートにあるファームウェアファイルのクリーニング
+rm -f *.uf2 *.hex *.bin
 
 # エラー結果の表示
 if [[ ${#errors[@]} -eq 0 ]]; then
