@@ -16,20 +16,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
-#include <stdio.h>
 #include "quantum.h"
 #include "nicola.h"
 
 
 // Defines names for use in layer keycodes and the keymap
 enum layer_number {
-    _BASE = 0,
-    _NICOLA = 1,
-    _FN1 = 2,
-    _FN2 = 3,
-    _TRACKBALL = 4,
-    _FN4 = 5,
-    _FN5 = 6,
+    _BASE,
+    _NICOLA,
+    _FN1,
+    _FN2,
+    _TRACKBALL,
+    _FN4,
+    _FN5,
 };
 
 /*
@@ -90,7 +89,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
       KC_LSFT,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,                                       KC_LEFT, KC_DOWN, KC_RGHT,  KC_DOT, KC_SLSH, KC_MINS,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-                        KC_LGUI, KC_LALT,   TT(4),  KC_SPC,   MS_BTN4,             MS_BTN5,  KC_ENT, KC_TRNS, KC_BSPC,  KC_ESC,
+                        KC_LGUI, KC_LALT,   LT(4, TO(_BASE)),  KC_SPC,   MS_BTN4,             MS_BTN5,  KC_ENT, KC_TRNS, KC_BSPC,  KC_ESC,
                                                                  KC_PGUP, MS_BTN3,  KC_PGDN, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
     ),
@@ -142,6 +141,17 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [5] = { ENCODER_CCW_CW(KC_PGUP, KC_PGDN) },
     [6] = { ENCODER_CCW_CW(KC_PGUP, KC_PGDN) },
 };
+#else
+bool encoder_update_user(uint8_t index, bool clockwise) {
+    if (index == 0) { /* First encoder */
+        if (clockwise) {
+            tap_code(MS_WHLD);
+        } else {
+            tap_code(MS_WHLU);
+        }
+    }
+    return false;
+}
 #endif
 
 
@@ -150,23 +160,6 @@ void matrix_init_user(void) {
   set_nicola(_NICOLA);
   // NICOLA親指シフト
 }
-
-void matrix_scan_user(void) {
-/*
-    if (IS_PRESSED(encoder1_ccw)) {
-        encoder1_ccw.pressed = false;
-        encoder1_ccw.time = (timer_read() | 1);
-        action_exec(encoder1_ccw);
-    }
-
-    if (IS_PRESSED(encoder1_cw)) {
-        encoder1_cw.pressed = false;
-        encoder1_cw.time = (timer_read() | 1);
-        action_exec(encoder1_cw);
-    }
-*/
-}
-
 
 #ifdef RGBLIGHT_ENABLE
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -205,49 +198,79 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 };
 #endif
 
+// NICOLA親指シフト
+static bool nicola_active = false;
 static bool fn_pressed = false;
-static uint16_t fn_pressed_time = 0;
+static uint16_t fn_pressed_time = 0; // fn_pressed の押下時刻を保持
+// NICOLA親指シフト
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
+ switch (keycode) {
+    // NICOLA親指シフト
     case NCL_OFF:
-      // NICOLA親指シフト
-      if (record->event.pressed) {
-        fn_pressed = true;
-        fn_pressed_time = record->event.time;
+        if (record->event.pressed) {
+            fn_pressed = true;
+            fn_pressed_time = timer_read(); // 押下時刻を記録
+            layer_on(_FN1); // レイヤー 2 をオン
+        } else {
+            layer_off(_FN1); // レイヤー 2 をオフ
 
-        layer_on(_FN1);
-      } else {
-        layer_off(_FN1);
-        if(fn_pressed
-        && (TIMER_DIFF_16(record->event.time, fn_pressed_time) < TAPPING_TERM)){
-            nicola_off();
+            // NCL_ON 直後（TAPPING_TERM 以内）の場合のみ、NICOLA モードと IME をオフ
+            if (fn_pressed && (TIMER_DIFF_16(timer_read(), fn_pressed_time) < TAPPING_TERM)) {
+                layer_off(_NICOLA); // _NICOLA レイヤーをオフ
+                nicola_off(); // NICOLA モードをオフ
+                nicola_active = false; // NICOLA モード状態を更新
+                #ifdef OS_WINDOWS
+                tap_code(KC_INT5); // 無変換キーで IME をオフ
+                #elif OS_MAC
+                tap_code(KC_LNG2); // Mac の日本語入力オフ
+                #endif
+            }
+            // NICOLA モードがオンの場合、IME 制御キーを送信せず、モードとレイヤーを維持
+            fn_pressed = false;
         }
-        fn_pressed = false;
-      }
+        return false;
+        break;
 
-      return false;
-      break;
     case NCL_ON:
-      if (record->event.pressed) {
-        // NICOLA親指シフト
-        nicola_on();
-        // NICOLA親指シフト
-      }
-      return false;
-      break;
-  }
+        if (record->event.pressed) {
+            nicola_on(); // NICOLA モードをオン
+            layer_on(_NICOLA); // _NICOLA レイヤーをオン
+            nicola_active = true; // NICOLA モード状態を更新
+            fn_pressed = true; // NCL_ON でも fn_pressed を設定
+            fn_pressed_time = timer_read(); // 押下時刻を記録
+            #ifdef OS_WINDOWS
+            tap_code(KC_INT4); // 変換キーで IME をオン
+            #elif OS_MAC
+            tap_code(KC_LNG1); // Mac の日本語入力オン
+            #endif
+        }
+        return false;
+        break;
+    // NICOLA親指シフト
+    default:
+        if (record->event.pressed) {
+            fn_pressed = false; // 他のキー押下で fn_pressed をリセット
+        }
+        break;
+    }
 
-  // NICOLA親指シフト
-  bool a = true;
-  if (nicola_state()) {
-    nicola_mode(keycode, record);
-    a = process_nicola(keycode, record);
-  }
-  if (a == false) return false;
-  // NICOLA親指シフト
+    // NICOLA親指シフト
+    // NICOLA モードがアクティブな場合、NICOLA 専用のキー処理を行う
+    bool continue_processing = true;
+    if (nicola_active) {
+        nicola_mode(keycode, record);
+        continue_processing = process_nicola(keycode, record);
+    }
+    return continue_processing;
+    // NICOLA親指シフト
+}
 
-  return true;
+// タイマーによる fn_pressed のリセット
+void matrix_scan_user(void) {
+    if (fn_pressed && (TIMER_DIFF_16(timer_read(), fn_pressed_time) >= TAPPING_TERM)) {
+        fn_pressed = false; // TAPPING_TERM 経過後に fn_pressed をリセット
+    }
 }
 
 #ifdef OLED_ENABLE

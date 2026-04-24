@@ -37,7 +37,8 @@ enum layer_number {
     _RAISE,
     _TRACKBALL,
     _L4,
-    _L5
+    _L5,
+    _L6
 };
 
 #define LW_MHEN LT(2,KC_INT5)  // lower
@@ -88,9 +89,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
       _______,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,                                        KC_TAB,   KC_P4,   KC_P5,   KC_P6, KC_PAST, KC_PENT,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-      _______, _______, _______, _______,  KC_F11,  KC_F12,                                       _______,   KC_P1,   KC_P2,   KC_P3, KC_PSLS, KC_MINS,
+      _______, _______, _______, _______,  KC_F11,  KC_F12,                                       _______,   KC_P1,   KC_P2,   KC_P3, KC_PSLS, _______,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-                        _______, _______,   TT(4), _______,      _______,           _______,   KC_P0, _______, KC_PDOT,  _______,
+                        _______, _______,LT(4, TO(_BASE)), _______,      _______,           _______,   KC_P0, _______, KC_PDOT,  _______,
                                                                  XXXXXXX, _______,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
     ),
@@ -102,7 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
       XXXXXXX, XXXXXXX, UG_VALD, UG_SATD, UG_HUED, UG_PREV,                                       SCRL_IN, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-                        KC_LGUI, DEL_ALT, KC_TRNS,  KC_SPC,     MS_BTN1,             MS_BTN2,  KC_ENT, RS_HENK, KC_BSPC,  KC_ESC,
+                        _______, _______, _______, _______,      _______,           _______, _______, _______, _______, _______,
                                                                  XXXXXXX, _______,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
     ),
@@ -130,7 +131,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                  XXXXXXX, _______,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
     ),
-
+   [_L6] = LAYOUT(
+  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
+      QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
+                        _______, _______, _______, _______,      _______,           _______,  _______, _______, _______,  _______,
+                                                                 XXXXXXX, _______,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+                                                            //`--------------'  `--------------'
+    ),
 };
 
 // Same function on all layers for now.
@@ -211,70 +223,65 @@ static uint16_t fn_pressed_time = 0; // fn_pressed の押下時刻を保持
 // NICOLA親指シフト
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-
+ switch (keycode) {
     // NICOLA親指シフト
     case NCL_OFF:
-      if (record->event.pressed) {
-        fn_pressed = true;
-        fn_pressed_time = timer_read(); // 押下時刻を記録
-        layer_on(_LOWER);
-      } else {
-        layer_off(_LOWER);
-        layer_off(_NICOLA);
-        nicola_off();
-        nicola_active = false;
-        // NCL_ON 直後（TAPPING_TERM 以内）の場合、IME をオフにする
-        if (fn_pressed && (TIMER_DIFF_16(timer_read(), fn_pressed_time) < TAPPING_TERM)) {
-            #ifdef OS_WINDOWS
-            tap_code(KC_INT5); // 無変換キーで IME をオフ
-            #elif OS_MAC
-            tap_code(KC_LNG2); // Mac の日本語入力オフ
-            #endif
+        if (record->event.pressed) {
+            fn_pressed = true;
+            fn_pressed_time = timer_read(); // 押下時刻を記録
+            layer_on(_LOWER); // レイヤー 2 をオン
         } else {
+            layer_off(_LOWER); // レイヤー 2 をオフ
+
+            // NCL_ON 直後（TAPPING_TERM 以内）の場合のみ、NICOLA モードと IME をオフ
+            if (fn_pressed && (TIMER_DIFF_16(timer_read(), fn_pressed_time) < TAPPING_TERM)) {
+                layer_off(_NICOLA); // _NICOLA レイヤーをオフ
+                nicola_off(); // NICOLA モードをオフ
+                nicola_active = false; // NICOLA モード状態を更新
+                #ifdef OS_WINDOWS
+                tap_code(KC_INT5); // 無変換キーで IME をオフ
+                #elif OS_MAC
+                tap_code(KC_LNG2); // Mac の日本語入力オフ
+                #endif
+            }
+            // NICOLA モードがオンの場合、IME 制御キーを送信せず、モードとレイヤーを維持
+            fn_pressed = false;
+        }
+        return false;
+        break;
+
+    case NCL_ON:
+        if (record->event.pressed) {
+            nicola_on(); // NICOLA モードをオン
+            layer_on(_NICOLA); // _NICOLA レイヤーをオン
+            nicola_active = true; // NICOLA モード状態を更新
+            fn_pressed = true; // NCL_ON でも fn_pressed を設定
+            fn_pressed_time = timer_read(); // 押下時刻を記録
             #ifdef OS_WINDOWS
             tap_code(KC_INT4); // 変換キーで IME をオン
             #elif OS_MAC
             tap_code(KC_LNG1); // Mac の日本語入力オン
             #endif
         }
-        fn_pressed = false;
-      }
-      return false;
-      break;
-    case NCL_ON:
-      if (record->event.pressed) {
-        nicola_on();
-        layer_on(_NICOLA);
-        nicola_active = true; // NICOLA モード状態を更新
-        fn_pressed = true; // NCL_ON でも fn_pressed を設定
-        fn_pressed_time = timer_read(); // 押下時刻を記録
-        #ifdef OS_WINDOWS
-        tap_code(KC_INT4); // 変換キーで IME をオン
-        #elif OS_MAC
-        tap_code(KC_LNG1); // Mac の日本語入力オン
-        #endif
-      }
-      return false;
-      break;
+        return false;
+        break;
     // NICOLA親指シフト
-
     default:
-        if(record->event.pressed){
-            fn_pressed = false;
+        if (record->event.pressed) {
+            fn_pressed = false; // 他のキー押下で fn_pressed をリセット
         }
         break;
-  }
+    }
 
-  // NICOLA親指シフト
-  bool a = true;
-  if (nicola_state()) {
-    nicola_mode(keycode, record);
-    a = process_nicola(keycode, record);
-  }
-  if (a == false) return false;
-  // NICOLA親指シフト
-    return true;
+    // NICOLA親指シフト
+    // NICOLA モードがアクティブな場合、NICOLA 専用のキー処理を行う
+    bool continue_processing = true;
+    if (nicola_active) {
+        nicola_mode(keycode, record);
+        continue_processing = process_nicola(keycode, record);
+    }
+    return continue_processing;
+    // NICOLA親指シフト
 }
 
 // タイマーによる fn_pressed のリセット

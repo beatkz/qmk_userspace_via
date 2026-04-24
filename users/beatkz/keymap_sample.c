@@ -36,6 +36,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_INT1, KC_UP,   KC_RSFT,
         MO(2),   KC_GRV,  KC_LGUI, KC_LALT, KC_INT5, KC_SPC,  NCL_ON,  KC_INT2, KC_RALT, KC_RGUI, MO(2),   KC_LEFT, KC_DOWN, KC_RGHT
     ),
+    // NICOLA親指シフト
     [1] = LAYOUT(
         _______, NG_1,    NG_2,    NG_3,    NG_4,    NG_5,    _______, _______, _______, _______, _______, _______, _______, _______,
         _______, NG_Q,    NG_W,    NG_E,    NG_R,    NG_T,    NG_Y,    NG_U,    NG_I,    NG_O,    NG_P,    NG_LBRC, NG_RBRC, _______,
@@ -43,6 +44,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, NG_Z,    NG_X,    NG_C,    NG_V,    NG_B,    NG_N,    NG_M,    NG_COMM, NG_DOT,  NG_SLSH, _______, _______, _______,
         _______, _______, _______, _______, NCL_OFF, NG_SHFTL,NG_SHFTR,_______, _______, _______, _______, _______, _______, _______
     ),
+    // NICOLA親指シフト
     [2] = LAYOUT(
         KC_TRNS, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_INS,
         KC_CAPS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_PSCR, KC_SCRL, KC_PAUS, KC_UP,   KC_TRNS, KC_DEL,
