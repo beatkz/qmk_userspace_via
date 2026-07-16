@@ -12,6 +12,7 @@ salicylic_acid3/ergoarrows:nicola_via
 salicylic_acid3/7skb:nicola_via
 salicylic_acid3/o51go:nicola_via
 aki27/cocot46plus:nicola_via
+yushakobo/ergo68:nicola_via
 #-----
 #ARMチップ搭載KB
 alg0002/teihai70h:nicola_via
