@@ -1,5 +1,7 @@
 #pragma once
 
+#define DYNAMIC_KEYMAP_LAYER_COUNT 5
+
 // NICOLA親指シフト
 #define TAPPING_TERM 180
 #undef TAP_CODE_DELAY
