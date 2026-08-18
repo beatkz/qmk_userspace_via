@@ -166,8 +166,11 @@ void matrix_init_user(void) {
 #ifdef OLED_ENABLE
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (!is_keyboard_master())
+  if (!is_keyboard_master()){
     return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
+  } else{
+    return OLED_ROTATION_270;  // flips the display 90 degrees if master
+  }
   return rotation;
 }
 
@@ -183,11 +186,11 @@ static void render_logo(void) {
 
 void oled_write_layer_state(void){
     // Host Keyboard Layer Status
-    oled_write_P(PSTR("Layer: "), false);
+    oled_write_P(PSTR("L:"), false);
 
     switch (get_highest_layer(layer_state)) {
     case _QWERTY:
-        oled_write_ln_P(PSTR("Default"), false);
+        oled_write_ln_P(PSTR("Bas"), false);
         break;
     case _FN1:
         oled_write_ln_P(PSTR("Fn1"), false);
@@ -196,21 +199,21 @@ void oled_write_layer_state(void){
         oled_write_ln_P(PSTR("Fn2"), false);
         break;
     case _NICOLA:
-        oled_write_ln_P(PSTR("Nicola"), false);
+        oled_write_ln_P(PSTR("Ncl"), false);
         break;
     default:
-        oled_write_ln_P(PSTR("Undefined"), false);
+        oled_write_ln_P(PSTR("-  "), false);
     }
 }
 
 void oled_write_host_led_state(void) {
     const led_t led_state = host_keyboard_led_state();
     oled_write_P(PSTR("NL:"), false);
-    oled_write_P(led_state.num_lock ? PSTR("on") : PSTR("- "), false);
-    oled_write_P(PSTR(" CL:"), false);
-    oled_write_P(led_state.caps_lock ? PSTR("on") : PSTR("- "), false);
-    oled_write_P(PSTR(" SL:"), false);
-    oled_write_ln_P(led_state.scroll_lock ? PSTR("on") : PSTR("-"), false);
+    oled_write_P(led_state.num_lock ? PSTR("On") : PSTR("- "), false);
+    oled_write_P(PSTR("CL:"), false);
+    oled_write_P(led_state.caps_lock ? PSTR("On") : PSTR("- "), false);
+    oled_write_P(PSTR("SL:"), false);
+    oled_write_ln_P(led_state.scroll_lock ? PSTR("On") : PSTR("- "), false);
 }
 
 static unsigned int type_count = 0;
@@ -225,11 +228,18 @@ void oled_write_type_count(void) {
     oled_write_ln(type_count_str, false);
 }
 
+void oled_write_type_count_portrait(void) {
+    static char type_count_str[5];
+    oled_write_P(PSTR("Types"), false);
+    itoa(type_count, type_count_str, 10);
+    oled_write_ln(type_count_str, false);
+}
+
 bool oled_task_user(void) {
   if (is_keyboard_master()) {
     oled_write_layer_state();
     oled_write_host_led_state();
-    oled_write_type_count();
+    oled_write_type_count_portrait();
   } else {
       render_logo();
   }
