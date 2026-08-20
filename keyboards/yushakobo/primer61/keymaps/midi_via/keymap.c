@@ -23,12 +23,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #ifdef OLED_ENABLE
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (!is_keyboard_master()){
-    return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
-  } else{
-    return OLED_ROTATION_270;  // flips the display 90 degrees if master
-  }
-  return rotation;
+  return OLED_ROTATION_270;
 }
 
 void oled_write_layer_state(void){
@@ -63,16 +58,36 @@ void oled_write_host_led_state(void) {
     oled_write_ln_P(led_state.scroll_lock ? PSTR("On") : PSTR("- "), false);
 }
 
+// MIDI状態の出力関数
+static void oled_write_midi_status(void) {
+#ifdef MIDI_ADVANCED
+    char buf[8];
+
+    // --- Octave ---
+    oled_write_P(PSTR("O:"), false);
+    itoa(midi_config.octave - 2, buf, 10);
+    oled_write(buf, false);
+    oled_write_P(PSTR("\n"), false);
+
+    // --- Transposition ---
+    oled_write_P(PSTR("T:"), false);
+    itoa(midi_config.transpose, buf, 10);
+    oled_write(buf, false);
+    oled_write_P(PSTR("\n"), false);
+
+    // --- Velocity ---
+    oled_write_P(PSTR("V:"), false);
+    itoa(midi_config.velocity, buf, 10);
+    oled_write(buf, false);
+    oled_write_P(PSTR("\n"), false);
+#else
+    oled_write_P(PSTR("MIDI\nOFF\n"), false);
+#endif
+}
+
 static unsigned int type_count = 0;
 void count_type(void) {
     type_count++;
-}
-
-void oled_write_type_count(void) {
-    static char type_count_str[7];
-    oled_write_P(PSTR("Type count: "), false);
-    itoa(type_count, type_count_str, 10);
-    oled_write_ln(type_count_str, false);
 }
 
 void oled_write_type_count_portrait(void) {
@@ -85,6 +100,7 @@ void oled_write_type_count_portrait(void) {
 bool oled_task_user(void) {
     oled_write_layer_state();
     oled_write_host_led_state();
+    oled_write_midi_status();
     oled_write_type_count_portrait();
     return false;
 }
