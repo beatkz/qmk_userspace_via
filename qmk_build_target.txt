@@ -13,6 +13,8 @@ salicylic_acid3/7skb:nicola_via
 salicylic_acid3/o51go:nicola_via
 aki27/cocot46plus:nicola_via
 yushakobo/ergo68:nicola_via
+yushakobo/primer61:via
+yushakobo/primer61:midi_via
 #-----
 #ARMチップ搭載KB
 alg0002/teihai70h:nicola_via
@@ -22,6 +24,7 @@ salicylic_acid3/jisplit89:nicola_via_kb2040
 salicylic_acid3/ergoarrows:nicola_via_kb2040
 salicylic_acid3/7skb:nicola_via_kb2040
 salicylic_acid3/goforty_ortho:nicola_via
+yushakobo/primer61:midi_via_kb2040
 #-----
 #ビルドターゲットがない表示が出たもの
 #ヒント：info.jsonからkeyboard.jsonにリネーム
